@@ -6,26 +6,30 @@ import keystaticConfig from '../../keystatic.config';
 const reader = createReader(process.cwd(), keystaticConfig);
 const bio = await reader.singletons.bio.read();
 
-const posts = await reader.collections.posts.list();
-const latestPosts = posts.slice(0, 3);
+const postsSlugs = await reader.collections.posts.list();
+const latestPostsSlugs = postsSlugs.slice(0, 3);
+const latestPosts = await Promise.all(latestPostsSlugs.map(async (slug) => {
+    const post = await reader.collections.posts.read(slug);
+    return { slug, ...post };
+}));
 ---
 
 <Layout title="Home // Dev Terminal">
 	<section class="mb-12">
-		<div class="border-2 border-terminal-text p-6 bg-black/50 shadow-[0_0_15px_rgba(0,255,65,0.2)]">
+		<div class="border-2 border-accent-secondary/50 p-6 bg-black/50 shadow-[0_0_15px_rgba(217,0,255,0.2)] hover:border-accent-primary transition-colors">
 			<p class="mb-4 text-xl">
-				<span class="text-terminal-dim">$</span> echo "Hello World"
+				<span class="text-accent-secondary">$</span> echo "Hello World"
 			</p>
-			<h2 class="text-4xl md:text-6xl mb-6">Hello, I'm {bio?.name || 'Developer'}.</h2>
-			<p class="text-2xl mb-8 typing-effect">
-				{bio?.role || 'Full Stack Developer'} | O365 Specialist | Retro Enthusiast
+			<h2 class="text-4xl md:text-6xl mb-6 text-accent-primary">Hello, I'm {bio?.name || 'Developer'}.</h2>
+			<p class="text-2xl mb-8 typing-effect text-terminal-text">
+				{bio?.role || 'Full Stack Developer'} | O365 Specialist | Cyberpunk Enthusiast
 			</p>
 
             <div class="flex gap-4">
-                <a href="/projects" class="bg-terminal-text text-terminal-bg px-4 py-2 font-bold hover:opacity-80 transition-opacity">
+                <a href="/projects" class="bg-accent-primary text-terminal-bg px-4 py-2 font-bold hover:bg-accent-secondary hover:text-terminal-bg transition-colors no-underline">
                     > VIEW_PROJECTS
                 </a>
-                <a href="/about" class="border border-terminal-text px-4 py-2 hover:bg-terminal-text hover:text-terminal-bg transition-colors">
+                <a href="/about" class="border border-accent-secondary px-4 py-2 text-accent-secondary hover:bg-accent-secondary hover:text-terminal-bg transition-colors no-underline">
                     > READ_BIO
                 </a>
             </div>
@@ -34,43 +38,40 @@ const latestPosts = posts.slice(0, 3);
 
     <div class="grid md:grid-cols-2 gap-8">
         <section>
-            <h3 class="text-2xl border-b border-terminal-dim mb-4 pb-2">> LATEST_LOGS</h3>
+            <h3 class="text-2xl border-b border-terminal-dim mb-4 pb-2 text-accent-secondary">> LATEST_LOGS</h3>
             <ul class="space-y-4">
-                {latestPosts.length > 0 ? latestPosts.map(async (slug) => {
-                    const post = await reader.collections.posts.read(slug);
-                    return (
-                        <li class="group">
-                            <span class="text-terminal-dim mr-2">[{post?.publishedDate || 'DATE_UNKNOWN'}]</span>
-                            <a href={`/blog/${slug}`} class="text-xl group-hover:bg-terminal-text group-hover:text-terminal-bg px-1">
-                                {post?.title}
-                            </a>
-                        </li>
-                    );
-                }) : (
+                {latestPosts.length > 0 ? latestPosts.map((post) => (
+                    <li class="group">
+                        <span class="text-terminal-dim mr-2">[{post?.publishedDate || 'DATE_UNKNOWN'}]</span>
+                        <a href={`/blog/${post.slug}`} class="text-xl text-terminal-text group-hover:bg-accent-secondary group-hover:text-terminal-bg px-1 no-underline">
+                            {post?.title}
+                        </a>
+                    </li>
+                )) : (
                     <li class="text-terminal-dim">No logs found...</li>
                 )}
             </ul>
         </section>
 
         <section>
-            <h3 class="text-2xl border-b border-terminal-dim mb-4 pb-2">> SYSTEM_STATS</h3>
-            <div class="font-mono text-sm space-y-2">
-                <div class="flex justify-between">
-                    <span>UPTIME:</span>
+            <h3 class="text-2xl border-b border-terminal-dim mb-4 pb-2 text-accent-secondary">> SYSTEM_STATS</h3>
+            <div class="font-mono text-sm space-y-2 text-terminal-text">
+                <div class="flex justify-between border-b border-terminal-dim/30 pb-1">
+                    <span class="text-accent-primary">UPTIME:</span>
                     <span>99.99%</span>
                 </div>
-                <div class="flex justify-between">
-                    <span>STACK:</span>
+                <div class="flex justify-between border-b border-terminal-dim/30 pb-1">
+                    <span class="text-accent-primary">STACK:</span>
                     <span>ASTRO, REACT, TAILWIND</span>
                 </div>
-                <div class="flex justify-between">
-                    <span>CMS:</span>
+                <div class="flex justify-between border-b border-terminal-dim/30 pb-1">
+                    <span class="text-accent-primary">CMS:</span>
                     <span>KEYSTATIC</span>
                 </div>
                 <div class="mt-4">
-                    <div class="w-full bg-terminal-dim h-4 relative">
-                        <div class="absolute top-0 left-0 h-full bg-terminal-text w-[85%] animate-pulse"></div>
-                        <span class="absolute top-0 left-0 w-full text-center text-xs text-black font-bold">COFFEE_LEVEL: 85%</span>
+                    <div class="w-full bg-terminal-dim/30 h-4 relative border border-terminal-dim">
+                        <div class="absolute top-0 left-0 h-full bg-accent-secondary w-[85%] animate-pulse"></div>
+                        <span class="absolute top-0 left-0 w-full text-center text-xs text-terminal-bg font-bold mix-blend-hard-light">COFFEE_LEVEL: 85%</span>
                     </div>
                 </div>
             </div>
