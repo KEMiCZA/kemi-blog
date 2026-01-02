@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@import "@fontsource/vt323";
+
+@theme {
+  --font-vt323: "VT323", monospace;
+
+  --color-terminal-bg: #0d1117;
+  --color-terminal-text: #00ff41;
+  --color-terminal-dim: #008f11;
+  --color-scanline: rgba(18, 16, 16, 0.5);
+
+  --animate-glitch: glitch 1s linear infinite;
+
+  @keyframes glitch {
+    2%, 64% {
+      transform: translate(2px,0) skew(0deg);
+    }
+    4%, 60% {
+      transform: translate(-2px,0) skew(0deg);
+    }
+    62% {
+      transform: translate(0,0) skew(5deg);
+    }
+  }
+}
+
+body {
+  @apply bg-terminal-bg text-terminal-text font-vt323;
+  overflow-x: hidden;
+}
+
+/* CRT Scanline effect */
+body::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+a {
+  @apply text-terminal-text hover:text-white transition-colors underline decoration-dotted;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold uppercase tracking-wider;
+}
+
+.glitch {
+  @apply relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  @apply absolute top-0 left-0 w-full h-full bg-terminal-bg;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -1px 0 #ff00c1;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -1px 0 #00fff9;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(70px, 9999px, 58px, 0); }
+  20% { clip: rect(10px, 9999px, 86px, 0); }
+  40% { clip: rect(93px, 9999px, 7px, 0); }
+  60% { clip: rect(25px, 9999px, 91px, 0); }
+  80% { clip: rect(15px, 9999px, 25px, 0); }
+  100% { clip: rect(61px, 9999px, 52px, 0); }
+}
+
+@keyframes glitch-anim2 {
+  0% { clip: rect(65px, 9999px, 100px, 0); }
+  20% { clip: rect(48px, 9999px, 22px, 0); }
+  40% { clip: rect(47px, 9999px, 98px, 0); }
+  60% { clip: rect(3px, 9999px, 11px, 0); }
+  80% { clip: rect(94px, 9999px, 44px, 0); }
+  100% { clip: rect(27px, 9999px, 7px, 0); }
+}

@@ -1,0 +1,28 @@
+{
+  "title": "Hello World",
+  "publishedDate": "2023-10-27",
+  "description": "My first log entry in this terminal.",
+  "content": [
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "text": "Welcome to my new digital home. This site was built using Astro, React, and Tailwind CSS v4, managed by Keystatic."
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "content": "console.log('Hello, World!');"
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "text": "Stay tuned for more updates on my projects and code snippets."
+        }
+      ]
+    }
+  ]
+}

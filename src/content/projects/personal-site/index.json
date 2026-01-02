@@ -1,0 +1,60 @@
+{
+  "title": "Personal Terminal Site",
+  "status": "active",
+  "link": "https://github.com/example/terminal-site",
+  "description": "A retro-themed personal landing page.",
+  "content": [
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "text": "A minimal personal landing page featuring a retro terminal aesthetic, built with modern web technologies."
+        }
+      ]
+    },
+    {
+      "type": "unordered-list",
+      "children": [
+        {
+          "type": "list-item",
+          "children": [
+            {
+              "type": "list-item-content",
+              "children": [
+                {
+                  "text": "Astro Framework"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "list-item",
+          "children": [
+            {
+              "type": "list-item-content",
+              "children": [
+                {
+                  "text": "Tailwind CSS v4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "list-item",
+          "children": [
+            {
+              "type": "list-item-content",
+              "children": [
+                {
+                  "text": "Keystatic CMS"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
