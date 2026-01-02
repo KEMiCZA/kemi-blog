@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+import { DocumentRenderer } from '@keystatic/core/renderer';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const bio = await reader.singletons.bio.read();
+---
+
+<Layout title="Bio // Dev Terminal">
+    <section class="max-w-3xl">
+        <h2 class="text-3xl mb-6 border-b border-terminal-text pb-2 inline-block">> WHOAMI</h2>
+
+        {bio ? (
+            <div class="space-y-6">
+                <div class="grid md:grid-cols-[1fr_2fr] gap-8">
+                    <div class="border border-terminal-dim p-4 h-fit">
+                        <div class="bg-terminal-dim/20 aspect-square flex items-center justify-center mb-4">
+                            <span class="text-6xl">👾</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">{bio.name}</h3>
+                        <p class="text-terminal-dim mb-4">{bio.role}</p>
+
+                        <div class="flex flex-col gap-2 text-sm">
+                            {bio.socials?.github && (
+                                <a href={bio.socials.github} target="_blank" rel="noopener noreferrer">github.exe</a>
+                            )}
+                            {bio.socials?.twitter && (
+                                <a href={bio.socials.twitter} target="_blank" rel="noopener noreferrer">twitter.exe</a>
+                            )}
+                            {bio.socials?.linkedin && (
+                                <a href={bio.socials.linkedin} target="_blank" rel="noopener noreferrer">linkedin.exe</a>
+                            )}
+                        </div>
+                    </div>
+
+                    <div class="prose prose-invert prose-p:text-terminal-text prose-headings:text-terminal-text prose-a:text-terminal-text max-w-none">
+                        <DocumentRenderer document={bio.about} />
+                    </div>
+                </div>
+            </div>
+        ) : (
+            <p>Bio data corrupt or missing. Please initialize via CMS.</p>
+        )}
+    </section>
+</Layout>

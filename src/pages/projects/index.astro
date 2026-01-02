@@ -1,0 +1,41 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../../keystatic.config';
+import { DocumentRenderer } from '@keystatic/core/renderer';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const projects = await reader.collections.projects.all();
+---
+
+<Layout title="Projects // Dev Terminal">
+    <h2 class="text-3xl mb-8 border-b border-terminal-text pb-2 inline-block">> EXECUTABLES</h2>
+
+    <div class="grid gap-8">
+        {projects.map(project => (
+            <div class="border-2 border-terminal-dim p-6 relative overflow-hidden group hover:border-terminal-text transition-colors">
+                <div class="absolute top-0 right-0 p-2 text-xs font-bold uppercase bg-terminal-dim text-black">
+                    {project.entry.status}
+                </div>
+
+                <h3 class="text-2xl font-bold mb-2">{project.entry.title}</h3>
+
+                <p class="mb-4 opacity-80">{project.entry.description}</p>
+
+                <div class="mb-6 prose prose-invert prose-sm max-w-none">
+                     <DocumentRenderer document={project.entry.content} />
+                </div>
+
+                {project.entry.link && (
+                    <a href={project.entry.link} target="_blank" rel="noopener noreferrer" class="inline-block bg-terminal-text text-terminal-bg px-4 py-2 font-bold hover:opacity-80 transition-opacity no-underline">
+                        RUN_PROJECT >>
+                    </a>
+                )}
+            </div>
+        ))}
+
+        {projects.length === 0 && (
+            <p class="text-terminal-dim">No projects compiled yet.</p>
+        )}
+    </div>
+</Layout>
