@@ -19,16 +19,16 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body class="min-h-screen flex flex-col p-4 md:p-8 max-w-4xl mx-auto relative">
-        <header class="mb-8 border-b-2 border-terminal-text pb-4 flex justify-between items-end">
+        <header class="mb-8 border-b-2 border-accent-secondary/50 pb-4 flex justify-between items-end">
             <div>
-                <h1 class="text-3xl md:text-5xl font-bold glitch" data-text="DEV_TERMINAL">DEV_TERMINAL</h1>
-                <p class="text-sm opacity-80">System.Status: ONLINE</p>
+                <h1 class="text-3xl md:text-5xl font-bold glitch text-accent-primary" data-text="DEV_TERMINAL">DEV_TERMINAL</h1>
+                <p class="text-sm opacity-80 text-accent-secondary">System.Status: <span class="text-green-400">ONLINE</span></p>
             </div>
             <nav class="flex gap-4 text-xl">
-                <a href="/" class="hover:bg-terminal-text hover:text-terminal-bg px-2 py-1">[HOME]</a>
-                <a href="/about" class="hover:bg-terminal-text hover:text-terminal-bg px-2 py-1">[BIO]</a>
-                <a href="/blog" class="hover:bg-terminal-text hover:text-terminal-bg px-2 py-1">[BLOG]</a>
-                <a href="/projects" class="hover:bg-terminal-text hover:text-terminal-bg px-2 py-1">[PROJECTS]</a>
+                <a href="/" class="hover:bg-accent-secondary hover:text-terminal-bg px-2 py-1 no-underline">[HOME]</a>
+                <a href="/about" class="hover:bg-accent-secondary hover:text-terminal-bg px-2 py-1 no-underline">[BIO]</a>
+                <a href="/blog" class="hover:bg-accent-secondary hover:text-terminal-bg px-2 py-1 no-underline">[BLOG]</a>
+                <a href="/projects" class="hover:bg-accent-secondary hover:text-terminal-bg px-2 py-1 no-underline">[PROJECTS]</a>
             </nav>
         </header>
 
@@ -36,7 +36,7 @@ const { title } = Astro.props;
 			<slot />
 		</main>
 
-        <footer class="mt-12 pt-4 border-t border-terminal-dim text-center text-sm opacity-60">
+        <footer class="mt-12 pt-4 border-t border-terminal-dim text-center text-sm opacity-60 text-terminal-dim">
             <p>&copy; {new Date().getFullYear()} // EOF</p>
         </footer>
 	</body>

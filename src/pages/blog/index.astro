@@ -14,22 +14,22 @@ const sortedPosts = posts.sort((a, b) => {
 ---
 
 <Layout title="Blog // Dev Terminal">
-    <h2 class="text-3xl mb-8 border-b border-terminal-text pb-2 inline-block">> SYSTEM_LOGS</h2>
+    <h2 class="text-3xl mb-8 border-b border-accent-secondary pb-2 inline-block text-accent-secondary">> SYSTEM_LOGS</h2>
 
     <div class="space-y-8">
         {sortedPosts.map(post => (
-            <article class="border border-terminal-dim p-4 hover:border-terminal-text transition-colors">
+            <article class="border border-terminal-dim p-4 hover:border-accent-primary transition-colors group bg-black/20">
                 <header class="mb-4">
                     <div class="flex flex-wrap gap-2 text-sm text-terminal-dim mb-1">
                         <span>[{post.entry.publishedDate}]</span>
                         <span>// LOG_ID: {post.slug}</span>
                     </div>
-                    <a href={`/blog/${post.slug}`} class="text-2xl font-bold hover:bg-terminal-text hover:text-terminal-bg px-1">
+                    <a href={`/blog/${post.slug}`} class="text-2xl font-bold text-accent-primary group-hover:bg-accent-primary group-hover:text-terminal-bg px-1 no-underline transition-colors">
                         {post.entry.title}
                     </a>
                 </header>
-                <p class="mb-4 opacity-80">{post.entry.description}</p>
-                <a href={`/blog/${post.slug}`} class="text-sm border-b border-dashed border-terminal-text">
+                <p class="mb-4 opacity-80 text-terminal-text">{post.entry.description}</p>
+                <a href={`/blog/${post.slug}`} class="text-sm border-b border-dashed border-accent-secondary text-accent-secondary hover:text-accent-primary hover:border-accent-primary transition-colors no-underline">
                     READ_FULL_LOG >>
                 </a>
             </article>

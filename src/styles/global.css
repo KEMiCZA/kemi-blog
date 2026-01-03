@@ -4,10 +4,15 @@
 @theme {
   --font-vt323: "VT323", monospace;
 
-  --color-terminal-bg: #0d1117;
-  --color-terminal-text: #00ff41;
-  --color-terminal-dim: #008f11;
-  --color-scanline: rgba(18, 16, 16, 0.5);
+  /* Cyberpunk Palette */
+  --color-terminal-bg: #090011; /* Very dark purple */
+  --color-terminal-text: #e0aaff; /* Light lilac for main text */
+  --color-terminal-dim: #7b2cbf; /* Deep purple for dimmed elements */
+
+  --color-accent-primary: #d900ff; /* Neon Magenta */
+  --color-accent-secondary: #00f0ff; /* Neon Cyan */
+
+  --color-scanline: rgba(20, 0, 30, 0.4);
 
   --animate-glitch: glitch 1s linear infinite;
 
@@ -22,6 +27,16 @@
       transform: translate(0,0) skew(5deg);
     }
   }
+
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--color-accent-primary); }
+  }
 }
 
 body {
@@ -29,7 +44,7 @@ body {
   overflow-x: hidden;
 }
 
-/* CRT Scanline effect */
+/* CRT Scanline effect - Updated for purple/blue tint */
 body::before {
   content: " ";
   display: block;
@@ -38,18 +53,23 @@ body::before {
   left: 0;
   bottom: 0;
   right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(20, 0, 30, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 255, 0.03), rgba(0, 255, 255, 0.03), rgba(0, 0, 255, 0.03));
   z-index: 2;
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
 }
 
 a {
-  @apply text-terminal-text hover:text-white transition-colors underline decoration-dotted;
+  @apply text-accent-secondary hover:text-accent-primary transition-colors underline decoration-dotted decoration-accent-primary/50;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  @apply font-bold uppercase tracking-wider;
+  @apply font-bold uppercase tracking-wider text-accent-primary;
+}
+
+/* Selection color */
+::selection {
+  @apply bg-accent-primary text-terminal-bg;
 }
 
 .glitch {
@@ -64,14 +84,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .glitch::before {
   left: 2px;
-  text-shadow: -1px 0 #ff00c1;
+  text-shadow: -1px 0 #00f0ff; /* Cyan shadow */
   clip: rect(44px, 450px, 56px, 0);
   animation: glitch-anim 5s infinite linear alternate-reverse;
 }
 
 .glitch::after {
   left: -2px;
-  text-shadow: -1px 0 #00fff9;
+  text-shadow: -1px 0 #d900ff; /* Magenta shadow */
   clip: rect(44px, 450px, 56px, 0);
   animation: glitch-anim2 5s infinite linear alternate-reverse;
 }
@@ -92,4 +112,20 @@ h1, h2, h3, h4, h5, h6 {
   60% { clip: rect(3px, 9999px, 11px, 0); }
   80% { clip: rect(94px, 9999px, 44px, 0); }
   100% { clip: rect(27px, 9999px, 7px, 0); }
+}
+
+/* Utility classes for borders to be used in Astro files */
+.border-theme {
+  @apply border-accent-secondary/50 hover:border-accent-primary transition-colors;
+}
+
+.bg-theme-highlight {
+   @apply bg-accent-primary text-terminal-bg hover:bg-accent-secondary hover:text-terminal-bg transition-colors;
+}
+
+.typing-effect {
+  @apply overflow-hidden whitespace-nowrap border-r-4 border-accent-primary w-fit pr-1;
+  animation:
+    typing 3.5s steps(40, end),
+    blink-caret .75s step-end infinite;
 }
