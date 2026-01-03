@@ -21,8 +21,8 @@ export default config({
           dividers: true,
           links: true,
           images: {
-            directory: 'src/assets/images/posts',
-            publicPath: '../../assets/images/posts',
+            directory: 'public/assets/images/posts',
+            publicPath: '/assets/images/posts',
           },
         }),
       },
@@ -51,8 +51,8 @@ export default config({
           dividers: true,
           links: true,
           images: {
-            directory: 'src/assets/images/projects',
-            publicPath: '../../assets/images/projects',
+            directory: 'public/assets/images/projects',
+            publicPath: '/assets/images/projects',
           },
         }),
       },
