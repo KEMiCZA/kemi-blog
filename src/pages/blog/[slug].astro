@@ -1,8 +1,8 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../../keystatic.config';
-import { DocumentRenderer } from '@keystatic/core/renderer';
+import Layout from "../../layouts/Layout.astro";
+import { createReader } from "@keystatic/core/reader";
+import keystaticConfig from "../../../keystatic.config";
+import { DocumentRenderer } from "@keystatic/core/renderer";
 
 const { slug } = Astro.params;
 
@@ -10,29 +10,42 @@ const { slug } = Astro.params;
 export async function getStaticPaths() {
     const reader = createReader(process.cwd(), keystaticConfig);
     const posts = await reader.collections.posts.list();
-    return posts.map(slug => ({ params: { slug } }));
+    return posts.map((slug) => ({ params: { slug } }));
 }
 
 const reader = createReader(process.cwd(), keystaticConfig);
-if (!slug) throw new Error('Slug not found');
+if (!slug) throw new Error("Slug not found");
 const post = await reader.collections.posts.read(slug);
-
-if (!post) throw new Error('Post not found');
+if (!post) throw new Error("Post not found");
+const content = await post.content();
 ---
 
-<Layout title={`${post.title} // Dev Terminal`}>
+<Layout title={`${post.title} // kemicza`}>
     <article class="max-w-3xl mx-auto">
         <header class="mb-8 border-b border-terminal-dim pb-8">
             <div class="text-sm text-terminal-dim mb-2 flex justify-between">
                 <span>DATE: {post.publishedDate}</span>
                 <a href="/blog" class="hover:text-white"><< BACK_TO_LOGS</a>
             </div>
-            <h1 class="text-3xl md:text-5xl font-bold mb-4 glitch" data-text={post.title}>{post.title}</h1>
-            {post.description && <p class="text-xl opacity-80 italic">"{post.description}"</p>}
+            <h1
+                class="text-3xl md:text-5xl font-bold mb-4 glitch"
+                data-text={post.title}
+            >
+                {post.title}
+            </h1>
+            {
+                post.description && (
+                    <p class="text-xl opacity-80 italic">
+                        "{post.description}"
+                    </p>
+                )
+            }
         </header>
 
-        <div class="prose prose-invert prose-lg prose-p:text-terminal-text prose-headings:text-terminal-text prose-a:text-terminal-text prose-code:text-yellow-300 prose-pre:bg-gray-900 prose-pre:border prose-pre:border-terminal-dim max-w-none">
-            <DocumentRenderer document={post.content} />
+        <div
+            class="prose prose-invert prose-lg prose-p:text-terminal-text prose-headings:text-terminal-text prose-a:text-terminal-text prose-code:text-yellow-300 prose-pre:bg-gray-900 prose-pre:border prose-pre:border-terminal-dim max-w-none"
+        >
+            <DocumentRenderer document={content} />
         </div>
     </article>
 </Layout>

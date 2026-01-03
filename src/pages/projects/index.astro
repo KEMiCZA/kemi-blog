@@ -5,10 +5,19 @@ import keystaticConfig from '../../../keystatic.config';
 import { DocumentRenderer } from '@keystatic/core/renderer';
 
 const reader = createReader(process.cwd(), keystaticConfig);
-const projects = await reader.collections.projects.all();
+const projectsItems = await reader.collections.projects.all();
+const projects = await Promise.all(
+    projectsItems.map(async (project) => {
+        const content = await project.entry.content();
+        return {
+            ...project,
+            content,
+        };
+    }),
+);
 ---
 
-<Layout title="Projects // Dev Terminal">
+<Layout title="Projects // kemicza">
     <h2 class="text-3xl mb-8 border-b border-accent-secondary pb-2 inline-block text-accent-secondary">> EXECUTABLES</h2>
 
     <div class="grid gap-8">
@@ -23,7 +32,7 @@ const projects = await reader.collections.projects.all();
                 <p class="mb-4 opacity-80 text-terminal-text">{project.entry.description}</p>
 
                 <div class="mb-6 prose prose-invert prose-sm max-w-none prose-p:text-terminal-text/80">
-                     <DocumentRenderer document={project.entry.content} />
+                     <DocumentRenderer document={project.content} />
                 </div>
 
                 {project.entry.link && (

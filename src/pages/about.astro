@@ -1,47 +1,79 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
-import { DocumentRenderer } from '@keystatic/core/renderer';
+import Layout from "../layouts/Layout.astro";
+import { createReader } from "@keystatic/core/reader";
+import keystaticConfig from "../../keystatic.config";
+import { DocumentRenderer } from "@keystatic/core/renderer";
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const bio = await reader.singletons.bio.read();
+const about = bio ? await bio.about() : null;
 ---
 
-<Layout title="Bio // Dev Terminal">
+<Layout title="Bio // kemicza">
     <section class="max-w-3xl">
-        <h2 class="text-3xl mb-6 border-b border-accent-secondary pb-2 inline-block text-accent-secondary">> WHOAMI</h2>
+        <h2
+            class="text-3xl mb-6 border-b border-accent-secondary pb-2 inline-block text-accent-secondary"
+        >
+            > WHOAMI
+        </h2>
 
-        {bio ? (
-            <div class="space-y-6">
-                <div class="grid md:grid-cols-[1fr_2fr] gap-8">
-                    <div class="border border-terminal-dim p-4 h-fit bg-black/30">
-                        <div class="bg-terminal-dim/20 aspect-square flex items-center justify-center mb-4 border border-terminal-dim/50">
-                            <span class="text-6xl animate-pulse">👾</span>
+        {
+            bio ? (
+                <div class="space-y-6">
+                    <div class="grid md:grid-cols-[1fr_2fr] gap-8">
+                        <div class="border border-terminal-dim p-4 h-fit bg-black/30">
+                            <div class="bg-terminal-dim/20 aspect-square flex items-center justify-center mb-4 border border-terminal-dim/50">
+                                <span class="text-6xl animate-pulse">👾</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-accent-primary">
+                                {bio.name}
+                            </h3>
+                            <p class="text-terminal-text/70 mb-4 border-b border-terminal-dim pb-2">
+                                {bio.role}
+                            </p>
+
+                            <div class="flex flex-col gap-2 text-sm">
+                                {bio.socials?.github && (
+                                    <a
+                                        href={bio.socials.github}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="hover:text-accent-primary"
+                                    >
+                                        github.exe
+                                    </a>
+                                )}
+                                {bio.socials?.twitter && (
+                                    <a
+                                        href={bio.socials.twitter}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="hover:text-accent-primary"
+                                    >
+                                        twitter.exe
+                                    </a>
+                                )}
+                                {bio.socials?.linkedin && (
+                                    <a
+                                        href={bio.socials.linkedin}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="hover:text-accent-primary"
+                                    >
+                                        linkedin.exe
+                                    </a>
+                                )}
+                            </div>
                         </div>
-                        <h3 class="text-xl font-bold mb-2 text-accent-primary">{bio.name}</h3>
-                        <p class="text-terminal-text/70 mb-4 border-b border-terminal-dim pb-2">{bio.role}</p>
 
-                        <div class="flex flex-col gap-2 text-sm">
-                            {bio.socials?.github && (
-                                <a href={bio.socials.github} target="_blank" rel="noopener noreferrer" class="hover:text-accent-primary">github.exe</a>
-                            )}
-                            {bio.socials?.twitter && (
-                                <a href={bio.socials.twitter} target="_blank" rel="noopener noreferrer" class="hover:text-accent-primary">twitter.exe</a>
-                            )}
-                            {bio.socials?.linkedin && (
-                                <a href={bio.socials.linkedin} target="_blank" rel="noopener noreferrer" class="hover:text-accent-primary">linkedin.exe</a>
-                            )}
+                        <div class="prose prose-invert prose-p:text-terminal-text prose-headings:text-accent-primary prose-a:text-accent-secondary max-w-none">
+                            <DocumentRenderer document={about} />
                         </div>
-                    </div>
-
-                    <div class="prose prose-invert prose-p:text-terminal-text prose-headings:text-accent-primary prose-a:text-accent-secondary max-w-none">
-                        <DocumentRenderer document={bio.about} />
                     </div>
                 </div>
-            </div>
-        ) : (
-            <p>Bio data corrupt or missing. Please initialize via CMS.</p>
-        )}
+            ) : (
+                <p>Bio data corrupt or missing. Please initialize via CMS.</p>
+            )
+        }
     </section>
 </Layout>
