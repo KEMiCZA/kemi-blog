@@ -20,6 +20,9 @@ export default defineConfig({
   },
   adapter: isStaticBuild ? undefined : node({
     mode: 'standalone'
-  })
+  }),
+  prefetch: {
+    prefetchAll: true
+  }
 });
 
