@@ -7,7 +7,8 @@ import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'static', // Back to static as hybrid is deprecated/same
+  site: 'https://kemicza.com',
+  output: 'static',
   integrations: [
     react(),
     keystatic()
@@ -15,8 +16,5 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
-  adapter: node({
-    mode: 'standalone'
-  }),
   prefetch: true
 });
