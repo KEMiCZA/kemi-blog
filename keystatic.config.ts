@@ -35,13 +35,13 @@ export default config({
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         status: fields.select({
-            label: 'Status',
-            options: [
-                { label: 'Active', value: 'active' },
-                { label: 'Archived', value: 'archived' },
-                { label: 'In Progress', value: 'in_progress' }
-            ],
-            defaultValue: 'active'
+          label: 'Status',
+          options: [
+            { label: 'Active', value: 'active' },
+            { label: 'Archived', value: 'archived' },
+            { label: 'In Progress', value: 'in_progress' }
+          ],
+          defaultValue: 'active'
         }),
         link: fields.url({ label: 'Project Link' }),
         description: fields.text({ label: 'Description' }),
@@ -60,23 +60,24 @@ export default config({
   },
   singletons: {
     bio: singleton({
-        label: 'Bio',
-        path: 'src/content/bio',
-        schema: {
-            name: fields.text({ label: 'Name' }),
-            role: fields.text({ label: 'Role' }),
-            socials: fields.object({
-                github: fields.url({ label: 'GitHub URL' }),
-                twitter: fields.url({ label: 'Twitter/X URL' }),
-                linkedin: fields.url({ label: 'LinkedIn URL' }),
-            }),
-            about: fields.document({
-                label: 'About Me',
-                formatting: true,
-                dividers: true,
-                links: true,
-            })
-        }
+      label: 'Bio',
+      path: 'src/content/bio',
+      schema: {
+        name: fields.text({ label: 'Name' }),
+        role: fields.text({ label: 'Role' }),
+        socials: fields.object({
+          github: fields.url({ label: 'GitHub URL' }),
+          twitter: fields.url({ label: 'Twitter/X URL' }),
+          linkedin: fields.url({ label: 'LinkedIn URL' }),
+          email: fields.url({ label: 'E-mail address' }),
+        }),
+        about: fields.document({
+          label: 'About Me',
+          formatting: true,
+          dividers: true,
+          links: true,
+        })
+      }
     })
   }
 });

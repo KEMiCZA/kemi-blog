@@ -63,6 +63,16 @@ const about = bio ? await bio.about() : null;
                                         linkedin.exe
                                     </a>
                                 )}
+                                {bio.socials?.email && (
+                                    <a
+                                        href={`mailto:${bio.socials.email}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="hover:text-accent-primary"
+                                    >
+                                        email.exe
+                                    </a>
+                                )}
                             </div>
                         </div>
 
