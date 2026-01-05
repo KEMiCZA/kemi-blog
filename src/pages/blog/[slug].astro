@@ -2,7 +2,8 @@
 import Layout from "../../layouts/Layout.astro";
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../../keystatic.config";
-import { DocumentRenderer } from "@keystatic/core/renderer";
+import BlogRenderer from "../../components/BlogRenderer";
+import { createHighlighter } from "shiki";
 
 const { slug } = Astro.params;
 
@@ -18,6 +19,47 @@ if (!slug) throw new Error("Slug not found");
 const post = await reader.collections.posts.read(slug);
 if (!post) throw new Error("Post not found");
 const content = await post.content();
+
+const highlighter = await createHighlighter({
+    themes: ["synthwave-84"],
+    langs: [
+        "typescript",
+        "javascript",
+        "json",
+        "html",
+        "css",
+        "bash",
+        "shell",
+        "yaml",
+        "markdown",
+        "powershell",
+    ],
+});
+
+const processContent = async (nodes: any[]): Promise<any[]> => {
+    return await Promise.all(
+        nodes.map(async (node) => {
+            if (node.type === "code") {
+                const code = node.children[0].text;
+                const lang = node.language || "text";
+                const html = highlighter.codeToHtml(code, {
+                    lang,
+                    theme: "synthwave-84",
+                });
+                return { ...node, highlightedCode: html, rawCode: code };
+            }
+            if (node.children) {
+                return {
+                    ...node,
+                    children: await processContent(node.children),
+                };
+            }
+            return node;
+        }),
+    );
+};
+
+const processedContent = await processContent(content);
 ---
 
 <Layout title={`${post.title} // kemicza`}>
@@ -25,7 +67,9 @@ const content = await post.content();
         <header class="mb-8 border-b border-terminal-dim pb-8">
             <div class="text-sm text-terminal-dim mb-2 flex justify-between">
                 <span>DATE: {post.publishedDate}</span>
-                <a href="/blog" class="hover:text-white"><< BACK_TO_LOGS</a>
+                <a href="/blog" class="hover:text-white"
+                    >&lt;&lt; BACK_TO_LOGS</a
+                >
             </div>
             <h1
                 class="text-3xl md:text-5xl font-bold mb-4 glitch"
@@ -45,7 +89,8 @@ const content = await post.content();
         <div
             class="prose prose-invert prose-lg prose-p:text-terminal-text prose-headings:text-terminal-text prose-a:text-terminal-text prose-code:text-yellow-300 prose-pre:bg-gray-900 prose-pre:border prose-pre:border-terminal-dim max-w-none"
         >
-            <DocumentRenderer document={content} />
+            <BlogRenderer document={processedContent} client:load />
         </div>
     </article>
 </Layout>
+```
