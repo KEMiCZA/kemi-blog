@@ -45,11 +45,15 @@ export const CodeBlock = ({ children, language, highlightedCode, rawCode, ...pro
                     )}
                 </button>
                 <div
-                    className="overflow-x-auto rounded-md border border-terminal-dim"
+                    className="overflow-x-auto rounded-md border border-terminal-dim text-xs"
                     dangerouslySetInnerHTML={{ __html: highlightedCode }}
                 />
             </div>
         );
     }
-    return <pre className="overflow-x-auto"><code>{children}</code></pre>;
+    return (
+        <div className="overflow-x-auto rounded-md border border-terminal-dim text-xs my-4">
+            <pre className="min-w-full w-fit p-4 bg-gray-900"><code>{children}</code></pre>
+        </div>
+    );
 };

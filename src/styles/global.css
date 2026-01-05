@@ -5,37 +5,59 @@
   --font-vt323: "VT323", monospace;
 
   /* Cyberpunk Palette */
-  --color-terminal-bg: #090011; /* Very dark purple */
-  --color-terminal-text: #e0aaff; /* Light lilac for main text */
-  --color-terminal-dim: #7b2cbf; /* Deep purple for dimmed elements */
+  --color-terminal-bg: #090011;
+  /* Very dark purple */
+  --color-terminal-text: #e0aaff;
+  /* Light lilac for main text */
+  --color-terminal-dim: #7b2cbf;
+  /* Deep purple for dimmed elements */
 
-  --color-accent-primary: #d900ff; /* Neon Magenta */
-  --color-accent-secondary: #00f0ff; /* Neon Cyan */
+  --color-accent-primary: #d900ff;
+  /* Neon Magenta */
+  --color-accent-secondary: #00f0ff;
+  /* Neon Cyan */
 
   --color-scanline: rgba(20, 0, 30, 0.4);
 
   --animate-glitch: glitch 1s linear infinite;
 
   @keyframes glitch {
-    2%, 64% {
-      transform: translate(2px,0) skew(0deg);
+
+    2%,
+    64% {
+      transform: translate(2px, 0) skew(0deg);
     }
-    4%, 60% {
-      transform: translate(-2px,0) skew(0deg);
+
+    4%,
+    60% {
+      transform: translate(-2px, 0) skew(0deg);
     }
+
     62% {
-      transform: translate(0,0) skew(5deg);
+      transform: translate(0, 0) skew(5deg);
     }
   }
 
   @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
+    from {
+      width: 0
+    }
+
+    to {
+      width: 100%
+    }
   }
 
   @keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: var(--color-accent-primary); }
+
+    from,
+    to {
+      border-color: transparent
+    }
+
+    50% {
+      border-color: var(--color-accent-primary);
+    }
   }
 }
 
@@ -63,7 +85,12 @@ a {
   @apply text-accent-secondary hover:text-accent-primary transition-colors underline decoration-dotted decoration-accent-primary/50;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   @apply font-bold uppercase tracking-wider text-accent-primary;
 }
 
@@ -84,34 +111,70 @@ h1, h2, h3, h4, h5, h6 {
 
 .glitch::before {
   left: 2px;
-  text-shadow: -1px 0 #00f0ff; /* Cyan shadow */
+  text-shadow: -1px 0 #00f0ff;
+  /* Cyan shadow */
   clip: rect(44px, 450px, 56px, 0);
   animation: glitch-anim 5s infinite linear alternate-reverse;
 }
 
 .glitch::after {
   left: -2px;
-  text-shadow: -1px 0 #d900ff; /* Magenta shadow */
+  text-shadow: -1px 0 #d900ff;
+  /* Magenta shadow */
   clip: rect(44px, 450px, 56px, 0);
   animation: glitch-anim2 5s infinite linear alternate-reverse;
 }
 
 @keyframes glitch-anim {
-  0% { clip: rect(70px, 9999px, 58px, 0); }
-  20% { clip: rect(10px, 9999px, 86px, 0); }
-  40% { clip: rect(93px, 9999px, 7px, 0); }
-  60% { clip: rect(25px, 9999px, 91px, 0); }
-  80% { clip: rect(15px, 9999px, 25px, 0); }
-  100% { clip: rect(61px, 9999px, 52px, 0); }
+  0% {
+    clip: rect(70px, 9999px, 58px, 0);
+  }
+
+  20% {
+    clip: rect(10px, 9999px, 86px, 0);
+  }
+
+  40% {
+    clip: rect(93px, 9999px, 7px, 0);
+  }
+
+  60% {
+    clip: rect(25px, 9999px, 91px, 0);
+  }
+
+  80% {
+    clip: rect(15px, 9999px, 25px, 0);
+  }
+
+  100% {
+    clip: rect(61px, 9999px, 52px, 0);
+  }
 }
 
 @keyframes glitch-anim2 {
-  0% { clip: rect(65px, 9999px, 100px, 0); }
-  20% { clip: rect(48px, 9999px, 22px, 0); }
-  40% { clip: rect(47px, 9999px, 98px, 0); }
-  60% { clip: rect(3px, 9999px, 11px, 0); }
-  80% { clip: rect(94px, 9999px, 44px, 0); }
-  100% { clip: rect(27px, 9999px, 7px, 0); }
+  0% {
+    clip: rect(65px, 9999px, 100px, 0);
+  }
+
+  20% {
+    clip: rect(48px, 9999px, 22px, 0);
+  }
+
+  40% {
+    clip: rect(47px, 9999px, 98px, 0);
+  }
+
+  60% {
+    clip: rect(3px, 9999px, 11px, 0);
+  }
+
+  80% {
+    clip: rect(94px, 9999px, 44px, 0);
+  }
+
+  100% {
+    clip: rect(27px, 9999px, 7px, 0);
+  }
 }
 
 /* Utility classes for borders to be used in Astro files */
@@ -120,7 +183,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .bg-theme-highlight {
-   @apply bg-accent-primary text-terminal-bg hover:bg-accent-secondary hover:text-terminal-bg transition-colors;
+  @apply bg-accent-primary text-terminal-bg hover:bg-accent-secondary hover:text-terminal-bg transition-colors;
 }
 
 .typing-effect {
@@ -128,4 +191,14 @@ h1, h2, h3, h4, h5, h6 {
   animation:
     typing 3.5s steps(40, end),
     blink-caret .75s step-end infinite;
+}
+
+/* Fix for code block background color coverage on horizontal scroll */
+.overflow-x-auto pre,
+.overflow-x-auto .shiki {
+  @apply min-w-full w-fit;
+  min-width: 100% !important;
+  width: fit-content !important;
+  display: block;
+  /* Ensure it behaves like a block that can expand */
 }
