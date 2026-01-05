@@ -27,10 +27,43 @@ const latestPosts = await Promise.all(
             <h2 class="text-4xl md:text-6xl mb-6 text-accent-primary">
                 Hello, I'm {bio?.name || "Developer"}.
             </h2>
-            <p class="text-2xl mb-8 typing-effect text-terminal-text">
-                {bio?.role || "Full Stack Developer"} | O365 Specialist | Cyberpunk
-                Enthusiast
+            <p
+                class="text-xl md:text-2xl mb-8 text-terminal-text min-h-[3.5rem] md:min-h-[2rem]"
+            >
+                <span
+                    class="typing-effect"
+                    data-text={`${bio?.role || "(ヘ･_･)ヘ┳━┳"}`}></span><span
+                    class="typing-cursor"></span>
             </p>
+
+            <script>
+                function initTyping() {
+                    const elements =
+                        document.querySelectorAll(".typing-effect");
+                    elements.forEach((el) => {
+                        const text = el.getAttribute("data-text") || "";
+                        let i = 0;
+                        el.textContent = "";
+                        const speed = 50; // milliseconds per character
+
+                        function type() {
+                            if (i < text.length) {
+                                el.textContent += text.charAt(i);
+                                i++;
+                                setTimeout(type, speed);
+                            }
+                        }
+
+                        type();
+                    });
+                }
+
+                // Initialize on load
+                document.addEventListener("DOMContentLoaded", initTyping);
+
+                // Support Astro view transitions
+                document.addEventListener("astro:page-load", initTyping);
+            </script>
 
             <div class="flex gap-4">
                 <a

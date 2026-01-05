@@ -1,14 +1,7 @@
 name: Kemal Sinanagic
-role: SharePoint Consultant | M365 Developer
+role: SharePoint Consultant | M365 Developer | O365 Specialist | Coffee Enthusiast
 socials:
   github: https://github.com/KEMiCZA
   twitter: https://twitter.com/example
   linkedin: https://www.linkedin.com/in/kemal-s-83a70b139/
   email: kemicza@gmail.com
-about:
-  - type: paragraph
-    children:
-      - text: "I am a passionate developer who loves building retro-futuristic interfaces and solving complex problems. My expertise lies in web development, O365 solutions, and creating immersive user experiences."
-  - type: paragraph
-    children:
-      - text: "When I'm not coding, I'm exploring the demoscene or tweaking my terminal config."

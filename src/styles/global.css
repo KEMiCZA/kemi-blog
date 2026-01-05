@@ -187,10 +187,12 @@ h6 {
 }
 
 .typing-effect {
-  @apply overflow-hidden whitespace-nowrap border-r-4 border-accent-primary w-fit pr-1;
-  animation:
-    typing 3.5s steps(40, end),
-    blink-caret .75s step-end infinite;
+  @apply inline break-words;
+}
+
+.typing-cursor {
+  @apply border-r-4 border-accent-primary ml-1;
+  animation: blink-caret .75s step-end infinite;
 }
 
 /* Fix for code block background color coverage on horizontal scroll */
