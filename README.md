@@ -54,6 +54,10 @@ This project is optimized for static hosting on **GitHub Pages**, **Vercel**, or
 > [!NOTE]
 > For production deployment, ensure `site` in `astro.config.mjs` is updated to your custom domain or GitHub URL.
 
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
 ---
 
 **[KEMiCZA](https://github.com/KEMiCZA)** // Built with coffee and scanlines.
