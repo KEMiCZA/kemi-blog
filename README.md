@@ -1,43 +1,59 @@
-# Astro Starter Kit: Minimal
+# 📟 KEMiCZA // Kemal Sinanagic
 
-```sh
-npm create astro@latest -- --template minimal
-```
+> **Retro-futuristic terminal portfolio and blog built with a modern stack.**
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+A high-performance personal website blending 80s cyberpunk aesthetics with state-of-the-art web technology. Featuring a CRT-style interface, glitch effects, and a seamless editing experience via Keystatic.
 
-## 🚀 Project Structure
+## 🚀 Tech Stack
 
-Inside of your Astro project, you'll see the following folders and files:
+- **Framework**: [Astro 5.x](https://astro.build/) (Static Site Generation)
+- **UI Architecture**: [React 19](https://react.dev/) Components
+- **Styling**: [Tailwind CSS 4.0](https://tailwindcss.com/) with custom cyberpunk theme
+- **Content Management**: [Keystatic](https://keystatic.com/) (Local-first Git-based CMS)
+- **Syntax Highlighting**: [Shiki](https://shiki.style/) with `synthwave-84` theme
+- **Typography**: [VT323](https://fonts.google.com/specimen/VT323) from Google Fonts
+
+## ✨ Features
+
+- **Cyberpunk UI**: CRT scanlines, neon gradients, and interactive glitch animations.
+- **Terminal Aesthetics**: VT323 monospaced typography and shell-like navigation.
+- **Integrated Blog**: Full markdown support with high-quality syntax highlighting for code blocks.
+- **Project Showcase**: Structured portfolio to display active, in-progress, and archived work.
+- **Demoscene Vibes**: Micro-animations and transitions inspired by classic demo culture.
+- **Local-First CMS**: Edit content locally via `localhost:4321/keystatic` and push directly to Git.
+
+## 🛠️ Project Structure
 
 ```text
 /
-├── public/
+├── .github/          # CI/CD Workflows (Planned)
+├── public/           # Static assets (images, fonts)
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/   # React & Astro components (CodeBlock, BlogRenderer)
+│   ├── content/      # Markdown & YAML content (posts, projects, bio)
+│   ├── layouts/      # Main application layout with CRT effects
+│   ├── pages/        # File-based routing
+│   └── styles/       # Global CSS with Tailwind 4 theme config
+├── keystatic.config.ts # CMS configuration
+└── astro.config.mjs   # Astro framework configuration
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+| Command | Action |
+| :--- | :--- |
+| `npm install` | Installs project dependencies |
+| `npm run dev` | Starts local dev server + Keystatic at `localhost:4321` |
+| `npm run build` | Generates a static production build in `./dist/` |
+| `npm run preview` | Previews the production build locally |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## 🌐 Hosting & Deployment
 
-## 👀 Want to learn more?
+This project is optimized for static hosting on **GitHub Pages**, **Vercel**, or **Netlify**. 
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+> [!NOTE]
+> For production deployment, ensure `site` in `astro.config.mjs` is updated to your custom domain or GitHub URL.
+
+---
+
+**[KEMiCZA](https://github.com/KEMiCZA)** // Built with coffee and scanlines.
