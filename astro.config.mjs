@@ -5,18 +5,21 @@ import tailwindcss from '@tailwindcss/vite';
 import keystatic from '@keystatic/astro';
 import node from '@astrojs/node';
 
+const isStaticBuild = process.env.SKIP_KEYSTATIC === 'true';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://kemicza.com',
-  output: 'static', // Back to static as hybrid is deprecated/same
+  output: 'static',
   integrations: [
     react(),
-    ...(process.env.SKIP_KEYSTATIC ? [] : [keystatic()])
+    ...(isStaticBuild ? [] : [keystatic()])
   ],
   vite: {
     plugins: [tailwindcss()]
   },
-  adapter: node({
+  adapter: isStaticBuild ? undefined : node({
     mode: 'standalone'
   })
 });
+
