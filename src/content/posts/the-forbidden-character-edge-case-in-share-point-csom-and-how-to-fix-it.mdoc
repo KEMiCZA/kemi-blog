@@ -1,0 +1,198 @@
+---
+title: The "Forbidden Character" Edge Case in SharePoint CSOM (and How to Fix It)
+publishedDate: 2026-01-20
+description: >-
+  Why certain hexadecimal characters crash your CSOM updates, and why the REST
+  API is your only hope.
+---
+# Intro
+
+\
+If you work with SharePoint CSOM (.NET), you know it's generally a reliable, strongly-typed friend. But every now and then, you hit an edge case that makes you question everything.
+
+Recently, I stumbled upon one of these "super edge cases" while trying to save string data containing non-printable ASCII control characters (specifically 0x01 and 0x02) into a SharePoint list item.
+
+In C#, the string looked perfectly fine. But the moment I tried setting the field spitem["KEY"], everything fell apart.
+
+Here is the story of why CSOM fails at this, why you can't hack your way around it, and the simple alternative that works.
+
+# The scenario
+
+Imagine you are migrating legacy data or integrating with a system that uses non-standard delimiters. You end up with a C# string that looks normal but hides a gremlin:
+
+```csharp
+// A normal looking string containing an invisible 0x01 character
+string dirtyData = "Header" + (char)0x01 + "Details";
+
+var item = list.GetItemById(1);
+item["MyMultilineField"] = dirtyData; // BOOM. Fails here!
+item.Update();
+context.ExecuteQuery();
+```
+
+# The Culprit: It’s All About XML
+
+\
+The root cause isn't SharePoint itself. it's the transport protocol CSOM uses.
+
+Under the hood, the .NET CSOM library translates all your actions into a large XML payload to send to the server.
+
+The problem is the XML 1.0 Standard. The standard explicitly forbids many low-ASCII control characters (like 0x00 through 0x1F, excluding tab, CR, and LF). They are illegal characters in an XML document.
+
+It doesn't matter if you try to escape them or wrap them in CDATA sections. An XML parser adhering to the standard MUST reject them.
+
+When your CSOM client sends that request, the SharePoint server's XML parser sees the forbidden character, panics, and rejects the entire request before it even looks at the data.
+
+List of characters that are not allowed: 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x0B, 0x0C, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0xFFFE
+
+For more information see [https://www.w3.org/TR/REC-xml/#charsets](https://www.w3.org/TR/REC-xml/#charsets)
+
+Exception details:
+
+```
+System.ArgumentException:
+'', hexadecimal value 0x01, is an invalid character.
+
+Stacktrace:
+   at System.Xml.XmlEncodedRawTextWriter.InvalidXmlChar(Int32 ch, Char* pDst, Boolean entitize)
+   at System.Xml.XmlEncodedRawTextWriter.WriteElementTextBlock(Char* pSrc, Char* pSrcEnd)
+   at System.Xml.XmlEncodedRawTextWriter.WriteString(String text)
+   at System.Xml.XmlRawWriter.WriteValue(String value)
+   at System.Xml.XmlWellFormedWriter.WriteValue(String value)
+   at Microsoft.SharePoint.Client.DataConvert.WriteValue_Char(XmlWriter writer, Object objValue)
+   at Microsoft.SharePoint.Client.DataConvert.WriteValueToXmlElement(XmlWriter writer, Object objValue, SerializationContext serializationContext)
+   at Microsoft.SharePoint.Client.ClientActionInvokeMethod.WriteToXmlPrivate(XmlWriter writer, SerializationContext serializationContext)
+   at Microsoft.SharePoint.Client.ClientActionInvokeMethod..ctor(ClientObject obj, String methodName, Object[] parameters)
+   at Microsoft.SharePoint.Client.ListItem.SetFieldValue(String fieldName, Object value)
+   at Microsoft.SharePoint.Client.ListItem.set_Item(String fieldName, Object value)
+
+```
+
+# The Fix
+
+Using purely CSOM there is no fix. Unfortunately we are dealing with XML specification limitations. I've even tried hooking the XmlWriterSettings clientside to set the CheckCharacters property to false. This works, but only locally. The same check is performed server side which throws the same exception.
+
+If you want you can try it for yourself (makes use of the [HarmonyLib ](https://github.com/pardeike/Harmony)package):
+
+```csharp
+public class SharePointHooks
+{
+    // Call this once at startup (e.g., in Main)
+    public static void ApplyHooks()
+    {
+        var harmony = new Harmony("com.example.sharepoint.hooks");
+        harmony.PatchAll(Assembly.GetExecutingAssembly());
+        Console.WriteLine("Hooks applied!");
+    }
+}
+
+// 1. Tell Harmony which class and method to hook
+[HarmonyPatch("Microsoft.SharePoint.Client.ChunkStringBuilder", "CreateXmlWriter")]
+public class Patch_OverrideXmlSettings
+{
+    static bool Prefix(object __instance, ref XmlWriter __result)
+    {
+        try
+        {
+            // 1. Get the internal StringBuilder from the ChunkStringBuilder instance.
+            // We use Harmony's AccessTools to find the private field.
+            // Note: The field name is typically "m_sb" in SharePoint libraries, 
+            // but we dynamically search for it just in case.
+
+            var type = __instance.GetType();
+            var sbField = AccessTools.Field(type, "m_sb");
+
+            // Fallback: If "m_sb" isn't found, grab the first StringBuilder field we find.
+            if (sbField == null)
+            {
+                foreach (var field in AccessTools.GetDeclaredFields(type))
+                {
+                    if (field.FieldType == typeof(StringBuilder))
+                    {
+                        sbField = field;
+                        break;
+                    }
+                }
+            }
+
+            if (sbField == null)
+                return true; // Run original method (fallback)
+
+            // 2. Get the actual StringBuilder object instance
+            StringBuilder internalSb = (StringBuilder)sbField.GetValue(__instance);
+
+            // 3. Define your CUSTOM settings
+            var settings = new XmlWriterSettings
+            {
+                CheckCharacters = false, // This is the fix we try (client-side)
+                OmitXmlDeclaration = true,
+                Indent = false,
+                CloseOutput = false,
+                ConformanceLevel = ConformanceLevel.Fragment
+            };
+
+            // 4. Create the new XmlWriter pointing to the internal StringBuilder
+            // We wrap the StringBuilder in a StringWriter, then in the XmlWriter
+            XmlWriter customWriter = XmlWriter.Create(new StringWriter(internalSb), settings);
+
+            // 5. Set the result and skip the original method
+            __result = customWriter;
+
+            return false; // Skip the original method
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($">> HOOK FAILED: {ex.Message}");
+            return true; // On error, fall back to the original method
+        }
+    }
+}
+```
+
+Option 1 is to remove the "dirty" characters from each string you update. Or to replace it with some other character.\
+The second option is to use a fallback to REST API's to execute the update if you truly want to preserve these characters.\
+
+While CSOM uses XML, the SharePoint REST API uses JSON.
+
+JSON is much more forgiving. It has no problem transporting control characters (it simply escapes them as \u0001).
+
+You don't need to rewrite your entire application. The pragmatic solution is a "Hybrid" approach: continue using CSOM for 99% of your work, but for the specific act of saving these "dirty" strings, switch to a helper method that uses HttpClient and REST.
+
+```csharp
+using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json; // NuGet: Newtonsoft.Json
+using System.Threading.Tasks;
+
+public static async Task UpdateItemViaRest(string siteUrl, string accessToken, string listTitle, int itemId, object payload)
+{
+    using (var client = new HttpClient())
+    {
+        // 1. Setup the Endpoint
+        string updateUrl = $"{siteUrl}/_api/web/lists/getbytitle('{listTitle}')/items({itemId})";
+
+        // 2. Configure Headers
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        
+        // IMPORTANT: These headers tell SharePoint this is an UPDATE, not a CREATE
+        client.DefaultRequestHeaders.Add("IF-MATCH", "*"); // Overwrite changes. Use ETag if you care about concurrency.
+        client.DefaultRequestHeaders.Add("X-HTTP-Method", "MERGE");
+
+        // 3. Serialize the payload to JSON
+        string jsonBody = JsonConvert.SerializeObject(payload);
+        var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+        // 4. Send the Request
+        // Note: We use PostAsync because X-HTTP-Method header handles the verb change
+        var response = await client.PostAsync(updateUrl, content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"REST Update Failed: {response.StatusCode} - {error}");
+        }
+    }
+}
+```
