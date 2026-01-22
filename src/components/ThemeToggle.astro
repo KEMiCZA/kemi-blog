@@ -1,0 +1,72 @@
+---
+---
+
+<button
+  id="theme-toggle"
+  class="hover:bg-accent-secondary hover:text-terminal-bg px-2 py-1 cursor-pointer transition-colors border border-transparent hover:border-terminal-bg"
+  aria-label="Toggle theme"
+>
+  [THEME]
+</button>
+
+<script>
+  const themeToggle = document.getElementById("theme-toggle");
+
+  const getTheme = () => {
+    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+      return localStorage.getItem("theme");
+    }
+    // Default to dark unless user explicitly wants light (or if we want to force dark as default)
+    // Cyberpunk theme usually prefers dark.
+    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+        // If user explicitly wants light, give them light.
+        return "light";
+    }
+    return "dark";
+  };
+
+  const setTheme = (theme) => {
+    if (theme === "light") {
+      document.documentElement.classList.add("light");
+    } else {
+      document.documentElement.classList.remove("light");
+    }
+    localStorage.setItem("theme", theme);
+    updateButtonText(theme);
+  };
+
+  const updateButtonText = (theme) => {
+    if (themeToggle) {
+        // Show the *action* available, or the mode?
+        // Let's stick to showing the current mode but with a clearer label if needed.
+        // Actually, user feedback on buttons usually:
+        // Text "Dark Mode" -> Click to enable Dark Mode? Or "Status: Dark Mode"?
+        // Given the "[ ]" style, it looks like a status indicator or a command.
+        // Let's use "[SWITCH: LIGHT]" or "[SWITCH: DARK]"? No, too long.
+        // Let's use "[LIGHT_MODE]" (active) / "[DARK_MODE]" (active).
+        // Wait, I originally planned to INVERT logic so it shows what you switch TO.
+        // If I am in DARK, I want to switch to LIGHT. Button: "[LIGHT_MODE]"?
+        // If I am in LIGHT, I want to switch to DARK. Button: "[DARK_MODE]"?
+        // But if the button says "[LIGHT_MODE]" while the site is black, it implies "Click for Light Mode".
+        // This is a good pattern for text buttons.
+
+        themeToggle.textContent = theme === 'dark' ? '[LIGHT_MODE]' : '[DARK_MODE]';
+    }
+  }
+
+  // Initial load
+  const initialTheme = getTheme();
+  setTheme(initialTheme);
+
+  // Event listener
+  themeToggle?.addEventListener("click", () => {
+    const isLight = document.documentElement.classList.contains("light");
+    setTheme(isLight ? "dark" : "light");
+  });
+
+  // Listen for view transitions if enabled in Astro
+  document.addEventListener('astro:after-swap', () => {
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    setTheme(currentTheme);
+  });
+</script>
