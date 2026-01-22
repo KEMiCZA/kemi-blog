@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../../keystatic.config';
+import { BlogList } from '../../components/BlogList';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const posts = await reader.collections.posts.all();
@@ -16,27 +17,5 @@ const sortedPosts = posts.sort((a, b) => {
 <Layout title="Blog // kemicza">
     <h2 class="text-3xl mb-8 border-b border-accent-secondary pb-2 inline-block text-accent-secondary">> SYSTEM_LOGS</h2>
 
-    <div class="space-y-8">
-        {sortedPosts.map(post => (
-            <article class="border border-terminal-dim p-4 hover:border-accent-primary transition-colors group bg-card">
-                <header class="mb-4">
-                    <div class="flex flex-wrap gap-2 text-sm text-terminal-dim mb-1">
-                        <span>[{post.entry.publishedDate}]</span>
-                        <span>// LOG_ID: {post.slug}</span>
-                    </div>
-                    <a href={`/blog/${post.slug}`} class="text-2xl font-bold text-accent-primary group-hover:bg-accent-primary group-hover:text-terminal-bg px-1 no-underline transition-colors">
-                        {post.entry.title}
-                    </a>
-                </header>
-                <p class="mb-4 opacity-80 text-terminal-text">{post.entry.description}</p>
-                <a href={`/blog/${post.slug}`} class="text-sm border-b border-dashed border-accent-secondary text-accent-secondary hover:text-accent-primary hover:border-accent-primary transition-colors no-underline">
-                    READ_FULL_LOG >>
-                </a>
-            </article>
-        ))}
-
-        {posts.length === 0 && (
-            <p class="text-terminal-dim">No logs found in the database.</p>
-        )}
-    </div>
+    <BlogList client:load posts={sortedPosts} />
 </Layout>

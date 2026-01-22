@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../../keystatic.config';
-import { DocumentRenderer } from '@keystatic/core/renderer';
+import { ProjectList } from '../../components/ProjectList';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const projectsItems = await reader.collections.projects.all();
@@ -20,31 +20,5 @@ const projects = await Promise.all(
 <Layout title="Projects // kemicza">
     <h2 class="text-3xl mb-8 border-b border-accent-secondary pb-2 inline-block text-accent-secondary">> EXECUTABLES</h2>
 
-    <div class="grid gap-8">
-        {projects.map(project => (
-            <div class="border-2 border-terminal-dim p-6 relative overflow-hidden group hover:border-accent-primary transition-colors bg-card">
-                <div class="absolute top-0 right-0 p-2 text-xs font-bold uppercase bg-terminal-dim text-terminal-text group-hover:bg-accent-primary group-hover:text-terminal-bg transition-colors">
-                    {project.entry.status}
-                </div>
-
-                <h3 class="text-2xl font-bold mb-2 text-accent-primary">{project.entry.title}</h3>
-
-                <p class="mb-4 opacity-80 text-terminal-text">{project.entry.description}</p>
-
-                <div class="mb-6 prose prose-invert prose-sm max-w-none prose-p:text-terminal-text/80">
-                     <DocumentRenderer document={project.content} />
-                </div>
-
-                {project.entry.link && (
-                    <a href={project.entry.link} target="_blank" rel="noopener noreferrer" class="inline-block bg-accent-primary text-terminal-bg px-4 py-2 font-bold hover:bg-accent-secondary transition-colors no-underline shadow-[0_0_10px_rgba(0,240,255,0.5)] hover:shadow-[0_0_15px_rgba(217,0,255,0.8)]">
-                        RUN_PROJECT >>
-                    </a>
-                )}
-            </div>
-        ))}
-
-        {projects.length === 0 && (
-            <p class="text-terminal-dim">No projects compiled yet.</p>
-        )}
-    </div>
+    <ProjectList client:load projects={projects} />
 </Layout>
