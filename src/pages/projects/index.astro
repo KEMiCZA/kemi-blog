@@ -22,7 +22,7 @@ const projects = await Promise.all(
 
     <div class="grid gap-8">
         {projects.map(project => (
-            <div class="border-2 border-terminal-dim p-6 relative overflow-hidden group hover:border-accent-primary transition-colors bg-black/20">
+            <div class="border-2 border-terminal-dim p-6 relative overflow-hidden group hover:border-accent-primary transition-colors bg-card">
                 <div class="absolute top-0 right-0 p-2 text-xs font-bold uppercase bg-terminal-dim text-terminal-text group-hover:bg-accent-primary group-hover:text-terminal-bg transition-colors">
                     {project.entry.status}
                 </div>
