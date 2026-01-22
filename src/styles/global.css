@@ -1,81 +1,73 @@
 @import "tailwindcss";
 @import "@fontsource/vt323";
 
+:root {
+  /* Default Dark Variables (Cyberpunk) */
+  --theme-bg: #090011; /* Very dark purple */
+  --theme-text: #e0aaff; /* Light lilac */
+  --theme-dim: #7b2cbf; /* Deep purple */
+  --theme-accent-primary: #d900ff; /* Neon Magenta */
+  --theme-accent-secondary: #00f0ff; /* Neon Cyan */
+  --theme-scanline: rgba(20, 0, 30, 0.4);
+  --theme-code-bg: #1a1a2e; /* Darker bg for code blocks if needed */
+  --theme-card-bg: rgba(0, 0, 0, 0.5);
+}
+
+:root.light {
+  /* Light Mode Variables (Cyberpunk Lab/Clean) */
+  --theme-bg: #f5f5f7; /* Off-white/Light Grey */
+  --theme-text: #2a0a3b; /* Dark Deep Purple */
+  --theme-dim: #8e44ad; /* Muted Purple */
+  --theme-accent-primary: #b000cc; /* Darker Magenta for contrast */
+  --theme-accent-secondary: #008ba3; /* Darker Cyan for contrast */
+  --theme-scanline: rgba(0, 0, 0, 0.03); /* Very subtle scanline */
+  --theme-code-bg: #f0f0f0; /* Light code bg? No, usually keep code dark or specific theme */
+  --theme-card-bg: rgba(255, 255, 255, 0.7);
+}
+
 @theme {
   --font-vt323: "VT323", monospace;
 
-  /* Cyberpunk Palette */
-  --color-terminal-bg: #090011;
-  /* Very dark purple */
-  --color-terminal-text: #e0aaff;
-  /* Light lilac for main text */
-  --color-terminal-dim: #7b2cbf;
-  /* Deep purple for dimmed elements */
-
-  --color-accent-primary: #d900ff;
-  /* Neon Magenta */
-  --color-accent-secondary: #00f0ff;
-  /* Neon Cyan */
-
-  --color-scanline: rgba(20, 0, 30, 0.4);
+  /* Map Tailwind colors to CSS variables */
+  --color-terminal-bg: var(--theme-bg);
+  --color-terminal-text: var(--theme-text);
+  --color-terminal-dim: var(--theme-dim);
+  --color-accent-primary: var(--theme-accent-primary);
+  --color-accent-secondary: var(--theme-accent-secondary);
+  --color-scanline: var(--theme-scanline);
 
   --animate-glitch: glitch 1s linear infinite;
 
   @keyframes glitch {
-
-    2%,
-    64% {
-      transform: translate(2px, 0) skew(0deg);
-    }
-
-    4%,
-    60% {
-      transform: translate(-2px, 0) skew(0deg);
-    }
-
-    62% {
-      transform: translate(0, 0) skew(5deg);
-    }
+    2%, 64% { transform: translate(2px, 0) skew(0deg); }
+    4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+    62% { transform: translate(0, 0) skew(5deg); }
   }
 
   @keyframes typing {
-    from {
-      width: 0
-    }
-
-    to {
-      width: 100%
-    }
+    from { width: 0 }
+    to { width: 100% }
   }
 
   @keyframes blink-caret {
-
-    from,
-    to {
-      border-color: transparent
-    }
-
-    50% {
-      border-color: var(--color-accent-primary);
-    }
+    from, to { border-color: transparent }
+    50% { border-color: var(--color-accent-primary); }
   }
 }
 
 body {
-  @apply bg-terminal-bg text-terminal-text font-vt323;
+  @apply bg-terminal-bg text-terminal-text font-vt323 transition-colors duration-300;
   overflow-x: hidden;
 }
 
-/* CRT Scanline effect - Updated for purple/blue tint */
+/* CRT Scanline effect */
 body::before {
   content: " ";
   display: block;
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(20, 0, 30, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 255, 0.03), rgba(0, 255, 255, 0.03), rgba(0, 0, 255, 0.03));
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, var(--color-scanline) 50%),
+              linear-gradient(90deg, rgba(255, 0, 255, 0.03), rgba(0, 255, 255, 0.03), rgba(0, 0, 255, 0.03));
   z-index: 2;
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
@@ -85,12 +77,7 @@ a {
   @apply text-accent-secondary hover:text-accent-primary transition-colors underline decoration-dotted decoration-accent-primary/50;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   @apply font-bold uppercase tracking-wider text-accent-primary;
 }
 
@@ -111,79 +98,47 @@ h6 {
 
 .glitch::before {
   left: 2px;
-  text-shadow: -1px 0 #00f0ff;
-  /* Cyan shadow */
+  text-shadow: -1px 0 var(--color-accent-secondary);
   clip: rect(44px, 450px, 56px, 0);
   animation: glitch-anim 5s infinite linear alternate-reverse;
 }
 
 .glitch::after {
   left: -2px;
-  text-shadow: -1px 0 #d900ff;
-  /* Magenta shadow */
+  text-shadow: -1px 0 var(--color-accent-primary);
   clip: rect(44px, 450px, 56px, 0);
   animation: glitch-anim2 5s infinite linear alternate-reverse;
 }
 
 @keyframes glitch-anim {
-  0% {
-    clip: rect(70px, 9999px, 58px, 0);
-  }
-
-  20% {
-    clip: rect(10px, 9999px, 86px, 0);
-  }
-
-  40% {
-    clip: rect(93px, 9999px, 7px, 0);
-  }
-
-  60% {
-    clip: rect(25px, 9999px, 91px, 0);
-  }
-
-  80% {
-    clip: rect(15px, 9999px, 25px, 0);
-  }
-
-  100% {
-    clip: rect(61px, 9999px, 52px, 0);
-  }
+  0% { clip: rect(70px, 9999px, 58px, 0); }
+  20% { clip: rect(10px, 9999px, 86px, 0); }
+  40% { clip: rect(93px, 9999px, 7px, 0); }
+  60% { clip: rect(25px, 9999px, 91px, 0); }
+  80% { clip: rect(15px, 9999px, 25px, 0); }
+  100% { clip: rect(61px, 9999px, 52px, 0); }
 }
 
 @keyframes glitch-anim2 {
-  0% {
-    clip: rect(65px, 9999px, 100px, 0);
-  }
-
-  20% {
-    clip: rect(48px, 9999px, 22px, 0);
-  }
-
-  40% {
-    clip: rect(47px, 9999px, 98px, 0);
-  }
-
-  60% {
-    clip: rect(3px, 9999px, 11px, 0);
-  }
-
-  80% {
-    clip: rect(94px, 9999px, 44px, 0);
-  }
-
-  100% {
-    clip: rect(27px, 9999px, 7px, 0);
-  }
+  0% { clip: rect(65px, 9999px, 100px, 0); }
+  20% { clip: rect(48px, 9999px, 22px, 0); }
+  40% { clip: rect(47px, 9999px, 98px, 0); }
+  60% { clip: rect(3px, 9999px, 11px, 0); }
+  80% { clip: rect(94px, 9999px, 44px, 0); }
+  100% { clip: rect(27px, 9999px, 7px, 0); }
 }
 
-/* Utility classes for borders to be used in Astro files */
+/* Utility classes */
 .border-theme {
   @apply border-accent-secondary/50 hover:border-accent-primary transition-colors;
 }
 
 .bg-theme-highlight {
   @apply bg-accent-primary text-terminal-bg hover:bg-accent-secondary hover:text-terminal-bg transition-colors;
+}
+
+.bg-card {
+  background-color: var(--theme-card-bg);
 }
 
 .typing-effect {
@@ -195,12 +150,30 @@ h6 {
   animation: blink-caret .75s step-end infinite;
 }
 
-/* Fix for code block background color coverage on horizontal scroll */
 .overflow-x-auto pre,
 .overflow-x-auto .shiki {
   @apply min-w-full w-fit;
   min-width: 100% !important;
   width: fit-content !important;
   display: block;
-  /* Ensure it behaves like a block that can expand */
+}
+
+/* Override prose-invert variables for light mode */
+:root.light .prose-invert {
+  --tw-prose-body: var(--theme-text);
+  --tw-prose-headings: var(--theme-text);
+  --tw-prose-lead: var(--theme-dim);
+  --tw-prose-links: var(--theme-accent-secondary);
+  --tw-prose-bold: var(--theme-text);
+  --tw-prose-counters: var(--theme-dim);
+  --tw-prose-bullets: var(--theme-dim);
+  --tw-prose-hr: var(--theme-dim);
+  --tw-prose-quotes: var(--theme-text);
+  --tw-prose-quote-borders: var(--theme-dim);
+  --tw-prose-captions: var(--theme-dim);
+  --tw-prose-code: var(--theme-accent-primary);
+  --tw-prose-pre-code: #e0aaff; /* Keep code light on dark bg */
+  --tw-prose-pre-bg: #090011; /* Keep dark background for code blocks even in light mode */
+  --tw-prose-th-borders: var(--theme-dim);
+  --tw-prose-td-borders: var(--theme-dim);
 }
