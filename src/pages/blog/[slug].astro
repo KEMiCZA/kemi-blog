@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../../keystatic.config";
 import BlogRenderer from "../../components/BlogRenderer";
-import { createHighlighter } from "shiki";
+import { getHighlighter } from "../../lib/highlighter";
 
 const { slug } = Astro.params;
 
@@ -20,22 +20,7 @@ const post = await reader.collections.posts.read(slug);
 if (!post) throw new Error("Post not found");
 const content = await post.content();
 
-const highlighter = await createHighlighter({
-    themes: ["synthwave-84"],
-    langs: [
-        "typescript",
-        "javascript",
-        "json",
-        "html",
-        "css",
-        "bash",
-        "shell",
-        "yaml",
-        "markdown",
-        "powershell",
-        "csharp",
-    ],
-});
+const highlighter = await getHighlighter();
 
 const processContent = async (nodes: any[]): Promise<any[]> => {
     return await Promise.all(
