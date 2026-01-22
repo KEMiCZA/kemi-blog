@@ -158,29 +158,6 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
-/* Blog Readability & Light Mode overrides for Typography */
-.prose {
-  line-height: 1.9; /* Improved readability */
-  max-width: 65ch; /* Optimal line length */
-}
-
-.prose p {
-  margin-bottom: 1.75em;
-  margin-top: 1.25em;
-  font-size: 1.15rem; /* Slightly larger text */
-}
-
-.prose h1, .prose h2, .prose h3 {
-  margin-top: 2em;
-  margin-bottom: 1em;
-  line-height: 1.3;
-}
-
-.prose li {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-}
-
 /* Override prose-invert variables for light mode */
 :root.light .prose-invert {
   --tw-prose-body: var(--theme-text);
